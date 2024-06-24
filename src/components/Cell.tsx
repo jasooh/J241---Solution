@@ -27,38 +27,44 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
         return true
     }
 
-    const infect = (id: number | number[]): void => {
+    const infect = (id: number | number[], pos: number[]): void => {
         const indexToLookFor = typeof(id) === 'number' ? id : convertToIndex(id)
-        setGrid(currentGrid => (
-            currentGrid.map((value, index) => (index === indexToLookFor ? true : value))
-        ));
+        if (isInBounds(pos) && !grid[indexToLookFor] ) {
+            setGrid(currentGrid => (
+                currentGrid.map((value, index) => (index === indexToLookFor ? true : value))
+            ));
+        }
     };
 
-    const spread = (id: number | number[]) => {
-        const dir = [
-            [0,0],
-            [1,0],
-            [-1,0],
-            [0,1],
-            [0,-1]
-        ]
+    useEffect(() => {
+        if (grid[id]) {
+            setInterval(() => {
+                const random1 = Math.floor(Math.random() * 4)
+                const random2 = Math.floor(Math.random() * 4)
 
-        dir.forEach(currentDir => {
-            const x = position[0] + currentDir[0];
-            const y = position[1] + currentDir[1];
+                const dir = [
+                    [1,0],
+                    [-1,0],
+                    [0,1],
+                    [0,-1]
+                ]
 
-            if (isInBounds([x, y])) {
-                infect([x, y]);
-            }
-        })
-    }
+                const x = position[0] + dir[random1][0]
+                const y = position[1] + dir[random2][1]
+
+                const randomDirection = [x, y]
+                infect(convertToIndex([x, y]), randomDirection)
+                console.log("ran")
+            }, 500)
+        }
+    }, [grid[id]])
 
     if (grid[id]) {
         return (
             <div className="border border-black bg-green-500" />
         )
     }
-    return <div className="border border-black" onClick={() => spread(id)} />
+    return <div className="border border-black" onClick={() => infect(id, position)} />
 }, (prevProps, nextProps) => {
     // check if props are equal and if the previous and next states are the same
     return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id];

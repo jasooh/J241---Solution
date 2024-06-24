@@ -7,7 +7,7 @@ function App() {
         <div className="flex flex-col items-center">
           <label className="mb-3 font-bold">GRID</label>
           <div className="w-[20rem] h-[21rem] mb-5">
-              <Grid rows={20} columns={20} />
+              <Grid rows={50} columns={50} />
           </div>
           {/* Start stop buttons */}
           <div className="flex gap-5 justify-center">
