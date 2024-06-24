@@ -1,14 +1,20 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
+
+// Context
+import { useTickContext } from "../context/TickContext";
 
 interface CellProps {
     id: number,
     position: number[],
     grid: boolean[],
     setGrid: Dispatch<SetStateAction<boolean[]>>,
-    gridDimensions: number[]
+    gridDimensions: number[],
 }
 
 const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps) => {
+    // Context
+    const tick = useTickContext();
+
     const convertToIndex = (position: number[]): number => {
         const arrRows = gridDimensions[0];
         return (position[1]*arrRows)+position[0]
@@ -36,28 +42,26 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
         }
     };
 
+    // multiplying
     useEffect(() => {
         if (grid[id]) {
-            setInterval(() => {
-                const random1 = Math.floor(Math.random() * 4)
-                const random2 = Math.floor(Math.random() * 4)
+            const random1 = Math.floor(Math.random() * 4)
+            const random2 = Math.floor(Math.random() * 4)
 
-                const dir = [
-                    [1,0],
-                    [-1,0],
-                    [0,1],
-                    [0,-1]
-                ]
+            const dir = [
+                [1,0],
+                [-1,0],
+                [0,1],
+                [0,-1]
+            ]
 
-                const x = position[0] + dir[random1][0]
-                const y = position[1] + dir[random2][1]
+            const x = position[0] + dir[random1][0]
+            const y = position[1] + dir[random2][1]
 
-                const randomDirection = [x, y]
-                infect(convertToIndex([x, y]), randomDirection)
-                console.log("ran")
-            }, 500)
+            const randomDirection = [x, y]
+            infect(convertToIndex([x, y]), randomDirection)
         }
-    }, [grid[id]])
+    }, [tick.tick])
 
     if (grid[id]) {
         return (
