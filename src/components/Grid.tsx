@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
 // Components
 import Cell from "./Cell";
@@ -61,14 +61,20 @@ const Grid = ({rows, columns}:GridProps) => {
     }
 
     // Status methods
-
-    const getInfectedCells = () => {
-        let count = 0
+    const getCellCount = (type: boolean) => {
+        let count = 0;
         cellGrid.forEach(value => {
-            if (value) {count++}
+            if (type == value) {
+                count++
+            }
         })
-        return count
+        if (count >= rows*columns) {tick.pauseSimulation();}
+        return count;
     }
+    
+    useEffect(() => {
+        setCellGrid(Array(rows*columns).fill(false));
+    }, [rows, columns])
 
     return (
         <>
@@ -86,7 +92,7 @@ const Grid = ({rows, columns}:GridProps) => {
 
                 {/* Start stop buttons */}
                 <div className="flex w-full h-[5rem] gap-2 justify-center">
-                    <button className={`font-semibold rounded-md border p-2 ${tick.isRunning.current ? 'border-green-800 text-green-800' : 'bg-white'} duration-200`} onClick={handleStartClick}>START</button>
+                    <button className={`font-semibold rounded-md border p-2 hover:border-green-800 ${tick.isRunning.current ? 'border-green-800 text-green-800' : 'bg-white'} duration-200`} onClick={handleStartClick}>START</button>
                     <button className={`font-semibold rounded-md border p-2 ${!tick.isRunning.current ? 'border-yellow-800 text-yellow-800' : 'bg-white'} duration-200`} onClick={handlePauseClick}>PAUSE</button>
                     <button className="font-semibold rounded-md border p-2 hover:border-red-800 hover:text-red-800" onClick={handleResetClick}>RESET</button>
                 </div>
@@ -97,11 +103,12 @@ const Grid = ({rows, columns}:GridProps) => {
                     <input className="border border-black rounded w-30 py-1 px-2 mt-[-10px] mb-5 text-center" type="number" step="0.01" autoFocus={true} value={tick.interval} onChange={handleIntervalChange}/>
                 </div>
             </div>
+            {/* Status tab */}
             <div className="flex flex-col gap-10 w-[20%] h-[50%] items-center shadow-xl p-10">
                 <label className="font-bold">STATUS WINDOW</label>
                 <div className="flex flex-col">
-                    <label>Infected: {getInfectedCells()}</label>
-                    <label>Normal: {rows*columns-getInfectedCells()} </label>
+                    <label>Infected: {getCellCount(true)}</label>
+                    <label>Normal: {getCellCount(false)} </label>
                     <label>Generation: {tick.tick}</label>
                 </div>
             </div>
