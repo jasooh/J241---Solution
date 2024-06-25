@@ -1,5 +1,5 @@
 // Cell component:
-// A component responsible for rendering a single box (cell) in the array.
+// A component responsible for rendering a single box (cell) in the array. Listens for updates on the tick context to know when to divide.
 
 // Hooks & types
 import React, { SetStateAction, useEffect, Dispatch } from "react";
@@ -49,34 +49,39 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     // useEffect listens for each tick update to infect nearby cells
     useEffect(() => {
         if (grid[id]) {
-            const random1 = Math.floor(Math.random() * 4)
-            const random2 = Math.floor(Math.random() * 4)
+            const random1 = Math.floor(Math.random() * 4);
+            const random2 = Math.floor(Math.random() * 4);
 
             const dir = [
                 [1,0],
                 [-1,0],
                 [0,1],
                 [0,-1]
-            ]
+            ];
 
-            const x = position[0] + dir[random1][0]
-            const y = position[1] + dir[random2][1]
+            const x = position[0] + dir[random1][0]; // move one unit in a random x direction
+            const y = position[1] + dir[random2][1]; // move one unit in a random y direction
 
-            const randomDirection = [x, y]
-            infect(convertToIndex([x, y]), randomDirection)
-        }
-    }, [tick.tick])
+            const randomDirection = [x, y];
+            infect(convertToIndex([x, y]), randomDirection);
+        };
+    }, [tick.tick]);
 
     // Render green or black depending on state
+    useEffect(() =>{
+        tick.renderCount.current += 1;
+    })
+
     if (grid[id]) {
         return (
             <div className="border border-black bg-green-600" />
-        )
-    }
-    return <div className="border rounded-sm border-black" onClick={() => infect(id, position)} />
+        );
+    };
+    return <div className="border border-black bg-white" onClick={() => infect(id, position)} />
+    
 }, (prevProps, nextProps) => {
     // If current props are equal to the next state props, then we do not need to re-render - cell has not been changed
-    return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id];
+    return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id]
 });
 
 export default Cell;

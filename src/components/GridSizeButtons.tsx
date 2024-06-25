@@ -23,9 +23,9 @@ const GridSizeButtons = ({rows, columns, setRows, setColumns}:GridSizeProps) => 
             <label className="font-bold">GRID SIZE</label>
             <div className="flex flex-col items-center">
                 <label>Rows</label>
-                <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" defaultValue={10} value={rows} onChange={(event) => handleChange(event, setRows)} />
+                <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={rows} onChange={(event) => handleChange(event, setRows)} />
                 <label>Columns</label>
-                <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" defaultValue={10} value={columns} onChange={(event) => handleChange(event, setColumns)} />
+                <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={columns} onChange={(event) => handleChange(event, setColumns)} />
             </div>
       </div>
     );

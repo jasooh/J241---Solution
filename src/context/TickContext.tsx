@@ -10,8 +10,9 @@ interface TickProps {
     restartSimulation: () => void, // Clears the simulation
     changeSimulationInterval: (value: number) => void, // Adjusts the time between cell divsions (state updates)
     interval: number, // Keeps track of current time between cell divisions
-    tick: number, // Keeps track of state updates
-    isRunning: MutableRefObject<Boolean> // Keeps track of if the simulation is running
+    tick: number, // Keeps track of how many ticks/generations of bacteria have passed
+    isRunning: MutableRefObject<Boolean> // Keeps track of if the simulation is running,
+    renderCount: MutableRefObject<number>
 };
 
 const Tick = createContext({} as TickProps)
@@ -23,6 +24,7 @@ const TickProvider = ({children}:{children: ReactNode}) => {
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
     const [interval, setIntervalValue] = useState(1);
     const isRunning = useRef(false);
+    const renderCount = useRef(0);
 
     // Context methods
     const startSimulation = () => {
@@ -51,14 +53,13 @@ const TickProvider = ({children}:{children: ReactNode}) => {
 
     const changeSimulationInterval = (value: number) => {
         if (isRunning.current) {
-            restartSimulation();
-            startSimulation();
+            pauseSimulation()
         };
         setIntervalValue(value);
     };
 
     return (
-        <Tick.Provider value={{ startSimulation, pauseSimulation, restartSimulation, changeSimulationInterval, interval, tick, isRunning }}>{children}</Tick.Provider>
+        <Tick.Provider value={{ startSimulation, pauseSimulation, restartSimulation, changeSimulationInterval, interval, tick, isRunning, renderCount }}>{children}</Tick.Provider>
     );
 };
 
@@ -68,4 +69,4 @@ const useTickContext = () => {
     return TickContext;
 };
 
-export { TickProvider, useTickContext };
+export { TickProvider, useTickContext, type TickProps };

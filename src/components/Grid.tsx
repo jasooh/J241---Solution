@@ -66,21 +66,6 @@ const Grid = () => {
         const clamp = Math.max(0, Math.min(100, parsedValue)); // clamp the values between 1 and 100
         isNaN(parsedValue) ? tick.changeSimulationInterval(1) : tick.changeSimulationInterval(clamp);
     };
-
-    // Status methods
-    const getCellCount = (type: boolean) => { // Get the total amount of infected (true) or healthy (false) cells
-        let count = 0;
-        cellGrid.forEach(value => {
-            if (type === value) {
-                count++;
-            }
-        })
-        if (count >= rows*columns) {
-            tick.pauseSimulation();
-        };
-
-        return count;
-    };
     
     return (
         <>
@@ -103,7 +88,7 @@ const Grid = () => {
                 {/* Start stop buttons */}
                 <div className="flex w-full h-[5rem] gap-2 justify-center">
                     <button className={`font-semibold rounded-md border p-2 hover:border-green-800 ${tick.isRunning.current ? 'border-green-800 text-green-800' : 'bg-white'} duration-200`} onClick={handleStartClick}>START</button>
-                    <button className={`font-semibold rounded-md border p-2 ${!tick.isRunning.current ? 'border-yellow-800 text-yellow-800' : 'bg-white'} duration-200`} onClick={handlePauseClick}>PAUSE</button>
+                    <button className={`font-semibold rounded-md border p-2 hover:border-yellow-800 ${!tick.isRunning.current ? 'border-yellow-800 text-yellow-800' : 'bg-white'} duration-200`} onClick={handlePauseClick}>PAUSE</button>
                     <button className="font-semibold rounded-md border p-2 hover:border-red-800 hover:text-red-800 duration-200" onClick={handleResetClick}>RESET</button>
                 </div>
 
@@ -115,7 +100,7 @@ const Grid = () => {
             </div>
 
             {/* Status tab */}
-            <GridStatusWindow actionCount={tick.tick} getCellCount={getCellCount} />
+            <GridStatusWindow tick={tick} cellGrid={cellGrid} rows={rows} columns={columns} />
         </>
     );
 };
