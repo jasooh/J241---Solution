@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, createContext, ReactNode, SetStateAction, Dispatch } from "react";
+import { useState, useRef, useContext, createContext, ReactNode, SetStateAction, Dispatch, MutableRefObject } from "react";
 
 interface TickProps {
     startSimulation: () => void,
@@ -6,7 +6,8 @@ interface TickProps {
     restartSimulation: () => void,
     changeSimulationInterval: (value: number) => void,
     interval: number,
-    tick: number
+    tick: number,
+    isRunning: MutableRefObject<Boolean>
 }
 
 const Tick = createContext({} as TickProps)
@@ -50,7 +51,7 @@ const TickProvider = ({children}:{children: ReactNode}) => {
     }
 
     return (
-        <Tick.Provider value={{ startSimulation, pauseSimulation, restartSimulation, changeSimulationInterval, interval, tick }}>{ children }</Tick.Provider>
+        <Tick.Provider value={{ startSimulation, pauseSimulation, restartSimulation, changeSimulationInterval, interval, tick, isRunning }}>{ children }</Tick.Provider>
     )
 }
 

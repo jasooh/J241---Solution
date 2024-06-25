@@ -35,7 +35,7 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
 
     const infect = (id: number | number[], pos: number[]): void => {
         const indexToLookFor = typeof(id) === 'number' ? id : convertToIndex(id)
-        if (isInBounds(pos) && !grid[indexToLookFor] ) {
+        if (isInBounds(pos) && grid[indexToLookFor] == false ) {
             setGrid(currentGrid => (
                 currentGrid.map((value, index) => (index === indexToLookFor ? true : value))
             ));
@@ -65,12 +65,15 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
 
     if (grid[id]) {
         return (
-            <div className="border border-black bg-green-500" />
+            <div className="border border-black bg-green-600" />
         )
     }
-    return <div className="border border-black" onClick={() => infect(id, position)} />
+    return <div className="border rounded-sm border-black" onClick={() => infect(id, position)} />
 }, (prevProps, nextProps) => {
     // check if props are equal and if the previous and next states are the same
+    if (!(prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id])) {
+        console.log("rendering")
+    }
     return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id];
 });
 

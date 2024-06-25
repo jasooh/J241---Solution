@@ -17,6 +17,7 @@ const Grid = ({rows, columns}:GridProps) => {
     // State variables
     const [cellGrid, setCellGrid] = useState(Array(rows*columns).fill(false)); // Populate the array
 
+    // Grid Methods
     const renderGrid = (cellGrid: boolean[]) => {
         let renderedComponents: JSX.Element[] = [];
         let currentPosition = [0, 0]
@@ -59,27 +60,52 @@ const Grid = ({rows, columns}:GridProps) => {
         gridTemplateColumns: `repeat(${columns}, 1fr)`
     }
 
+    // Status methods
+
+    const getInfectedCells = () => {
+        let count = 0
+        cellGrid.forEach(value => {
+            if (value) {count++}
+        })
+        return count
+    }
+
     return (
-        <div className="flex flex-col items-center w-[35rem] h-[40rem] gap-2 mb-5">
-            <div className="flex flex-col items-center">
-                <label className="font-bold">BACTERIA SIMULATION</label>
-                <label className="text-sm font-semibold text-gray-500 my-[-5px]">{rows}x{columns}</label>
+        <>
+            <div className="flex flex-col items-center w-[60%] h-[90%] gap-3 shadow-xl p-5">
+                {/* Title & heading */}
+                <div className="flex flex-col items-center">
+                    <label className="font-bold">BACTERIA SIMULATION</label>
+                    <label className="text-sm font-semibold text-gray-500">{rows}x{columns}</label>
+                </div>
+
+                {/* Grid rendering */}
+                <div className="w-[70%] h-[80%] border rounded-sm border-black grid" style={gridStyle}>
+                    {renderGrid(cellGrid)}
+                </div>
+
+                {/* Start stop buttons */}
+                <div className="flex w-full h-[5rem] gap-2 justify-center">
+                    <button className={`font-semibold rounded-md border p-2 ${tick.isRunning.current ? 'border-green-800 text-green-800' : 'bg-white'} duration-200`} onClick={handleStartClick}>START</button>
+                    <button className={`font-semibold rounded-md border p-2 ${!tick.isRunning.current ? 'border-yellow-800 text-yellow-800' : 'bg-white'} duration-200`} onClick={handlePauseClick}>PAUSE</button>
+                    <button className="font-semibold rounded-md border p-2 hover:border-red-800 hover:text-red-800" onClick={handleResetClick}>RESET</button>
+                </div>
+
+                {/* Time input */}
+                <div className="flex flex-col items-center gap-3">
+                    <label className="font-semibold">TIME INTERVAL (Seconds): </label>
+                    <input className="border border-black rounded w-30 py-1 px-2 mt-[-10px] mb-5 text-center" type="number" step="0.01" autoFocus={true} value={tick.interval} onChange={handleIntervalChange}/>
+                </div>
             </div>
-            <div className="w-full h-full border border-black grid" style={gridStyle}>
-                {renderGrid(cellGrid)}
+            <div className="flex flex-col gap-10 w-[20%] h-[50%] items-center shadow-xl p-10">
+                <label className="font-bold">STATUS WINDOW</label>
+                <div className="flex flex-col">
+                    <label>Infected: {getInfectedCells()}</label>
+                    <label>Normal: {rows*columns-getInfectedCells()} </label>
+                    <label>Generation: {tick.tick}</label>
+                </div>
             </div>
-            {/* Start stop buttons */}
-            <div className="flex gap-5 justify-center">
-                <button className="font-semibold hover:font-bold" onClick={handleStartClick}>START</button>
-                <button className="font-semibold hover:font-bold" onClick={handlePauseClick}>PAUSE</button>
-                <button className="font-semibold hover:font-bold" onClick={handleResetClick}>RESET</button>
-            </div>
-            {/* Time input */}
-            <div className="flex flex-col items-center gap-3">
-                <label className="font-semibold">TIME INTERVAL (Seconds): </label>
-                <input className="border border-black rounded w-30 py-1 px-2 my-2 mb-5 text-center" type="number" step="0.01" value={tick.interval} onChange={handleIntervalChange}/>
-            </div>
-        </div>
+        </>
     )
 }
 

@@ -6,9 +6,9 @@ import { TickProvider } from "./context/TickContext";
 
 function App() {
   return (
-    <div className="flex items-center justify-center w-screen h-screen bg-white">
+    <div className="flex gap-5 items-center justify-center w-screen h-screen bg-white">
       <TickProvider>
-        <Grid rows={30} columns={30} />
+        <Grid rows={50} columns={50} />
       </TickProvider>
     </div>
   );
