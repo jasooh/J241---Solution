@@ -88,7 +88,7 @@ const Grid = () => {
             <GridSizeButtons rows={rows} columns={columns} setRows={setRows} setColumns={setColumns} />
 
             {/* Grid container */}
-            <div className="flex flex-col items-center w-[60%] h-[90%] gap-3 shadow-xl p-5">
+            <div className="flex flex-col items-center w-full max-w-[40rem] h-[40rem] shadow-xl gap-3 p-5">
                 {/* Title & heading */}
                 <div className="flex flex-col items-center">
                     <label className="font-bold">BACTERIA SIMULATION</label>
@@ -96,7 +96,7 @@ const Grid = () => {
                 </div>
 
                 {/* Grid rendering */}
-                <div className="w-[70%] h-[80%] border rounded-sm border-black grid" style={gridStyle}>
+                <div className="w-full h-full border rounded-sm border-black grid" style={gridStyle}>
                     {renderGrid(cellGrid)}
                 </div>
 

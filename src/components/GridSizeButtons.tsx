@@ -19,7 +19,7 @@ const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setVariable: D
 
 const GridSizeButtons = ({rows, columns, setRows, setColumns}:GridSizeProps) => {
     return (
-        <div className="flex flex-col gap-5 w-[10%] h-[30%] items-center justify-center shadow-xl p-10">
+        <div className="flex flex-col items-center justify-center gap-5 w-full max-w-[20rem] h-[20rem] shadow-xl p-10">
             <label className="font-bold">GRID SIZE</label>
             <div className="flex flex-col items-center">
                 <label>Rows</label>

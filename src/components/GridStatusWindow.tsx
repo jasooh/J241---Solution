@@ -5,7 +5,7 @@ interface GridStatusWindowProps {
 
 const GridStatusWindow = ({actionCount, getCellCount}:GridStatusWindowProps) => {
     return (
-        <div className="flex flex-col gap-10 w-[10%] h-[30%] items-center justify-center shadow-xl">
+        <div className="flex flex-col items-center justify-center gap-5 w-full max-w-[20rem] h-[20rem] shadow-xl p-10">
             <label className="font-bold">STATUS WINDOW</label>
             <div className="flex flex-col">
                 <label>Infected: {getCellCount(true)}</label>
