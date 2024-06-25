@@ -1,48 +1,52 @@
-import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
+// Cell component:
+// A component responsible for rendering a single box (cell) in the array.
+
+// Hooks & types
+import React, { SetStateAction, useEffect, Dispatch } from "react";
 
 // Context
 import { useTickContext } from "../context/TickContext";
 
 interface CellProps {
-    id: number,
-    position: number[],
-    grid: boolean[],
-    setGrid: Dispatch<SetStateAction<boolean[]>>,
-    gridDimensions: number[],
-}
+    id: number, // Index of cell in the state array
+    position: number[], // [Row, Column] position of the cell, used for performing vector math and visualizing direction in state array
+    grid: boolean[], // State array
+    setGrid: Dispatch<SetStateAction<boolean[]>>, // Method to update the state array
+    gridDimensions: number[], // Holds dimensions of state array
+};
 
 const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps) => {
-    // Context
     const tick = useTickContext();
 
-    const convertToIndex = (position: number[]): number => {
+    // Cell methods
+    const convertToIndex = (position: number[]): number => { // Converts 2D coordinates given in an array into an index for the array that manages the state of the cells
         const arrRows = gridDimensions[0];
-        return (position[1]*arrRows)+position[0]
-    }
+        return (position[1]*arrRows)+position[0]; // (current column * total rows in state array) + current row
+    };
 
-    const isInBounds = (position: number[]): boolean => {
+    const isInBounds = (position: number[]): boolean => { // Returns true or false based on if the passed position is within the grid boundaries
         const currentRow = position[0];
         const currentCol = position[1];
 
-        const gridRows = gridDimensions[0]
-        const gridCols = gridDimensions[1]
+        const gridRows = gridDimensions[0];
+        const gridCols = gridDimensions[1];
 
         if ((currentCol+1 > gridCols || currentCol < 0) || (currentRow+1 > gridRows || currentRow < 0)) {
-            return false
-        }
-        return true
-    }
+            return false;
+        };
+        return true;
+    };
 
-    const infect = (cellId: number | number[], pos: number[]): void => {
-        const indexToLookFor = typeof(cellId) === 'number' ? cellId : convertToIndex(cellId)
-        if (isInBounds(pos) && grid[indexToLookFor] == false ) {
+    const infect = (cellId: number | number[], pos: number[]): void => { // Infects a healthy cell using its state array index or coordinates
+        const indexToLookFor = typeof(cellId) === 'number' ? cellId : convertToIndex(cellId);
+        if (isInBounds(pos) && grid[indexToLookFor] === false ) {
             setGrid(currentGrid => (
                 currentGrid.map((value, index) => (index === indexToLookFor ? true : value))
             ));
-        }
+        };
     };
 
-    // multiplying
+    // useEffect listens for each tick update to infect nearby cells
     useEffect(() => {
         if (grid[id]) {
             const random1 = Math.floor(Math.random() * 4)
@@ -63,6 +67,7 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
         }
     }, [tick.tick])
 
+    // Render green or black depending on state
     if (grid[id]) {
         return (
             <div className="border border-black bg-green-600" />
@@ -70,7 +75,7 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     }
     return <div className="border rounded-sm border-black" onClick={() => infect(id, position)} />
 }, (prevProps, nextProps) => {
-    // check if props are equal and if the previous and next states are the same
+    // If current props are equal to the next state props, then we do not need to re-render - cell has not been changed
     return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id];
 });
 

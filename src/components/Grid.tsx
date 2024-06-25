@@ -1,30 +1,34 @@
-import { useState, useRef, useEffect } from "react"
+// Grid component:
+// A component responsible for holding the rendered grid and components related to it (GridSizeButtons, GridStatusWindows, & Cell).
+// Creates the array that manages the state of all the cells within the rendered grid.
+
+// Hooks
+import { useState, useEffect } from "react";
 
 // Components
 import Cell from "./Cell";
+import GridSizeButtons from "./GridSizeButtons";
+import GridStatusWindow from "./GridStatusWindow";
 
 // Context
 import { useTickContext } from "../context/TickContext";
 
-interface GridProps {
-    rows: number,
-    columns: number
-}
-
-const Grid = ({rows, columns}:GridProps) => {
-    // Context
+const Grid = () => {
     const tick = useTickContext();
-    // State variables
-    const [cellGrid, setCellGrid] = useState(Array(rows*columns).fill(false)); // Populate the array
 
-    // Grid Methods
-    const renderGrid = (cellGrid: boolean[]) => {
+    // State variables
+    const [rows, setRows] = useState(10);
+    const [columns, setColumns] = useState(10);
+    const [cellGrid, setCellGrid] = useState(Array(rows*columns).fill(false)); // Populate the array, this is the centralized array to manage the state of all cells
+
+    // Grid methods & styling
+    const renderGrid = (cellGrid: boolean[]) => { // Returns an array of JSX.Elements of <Cell>
         let renderedComponents: JSX.Element[] = [];
-        let currentPosition = [0, 0]
+        let currentPosition = [0, 0];
         for (let currentRow = 0; currentRow < rows; currentRow++) {
             for (let currentColumn = 0; currentColumn < columns; currentColumn++) {
-                const currentKey = (currentColumn*rows)+currentRow
-                currentPosition = [currentRow, currentColumn]
+                const currentKey = (currentColumn*rows)+currentRow;
+                currentPosition = [currentRow, currentColumn];
                 renderedComponents.push(
                     <Cell key={currentKey} id={currentKey} position={currentPosition} grid={cellGrid} setGrid={setCellGrid} gridDimensions={[rows, columns]} />
                 );
@@ -32,54 +36,58 @@ const Grid = ({rows, columns}:GridProps) => {
         }
 
         return renderedComponents;
-    }
+    };
 
-    // Setting row and column sizes
     const gridStyle = {
         gridTemplateRows: `repeat(${rows}, 1fr)`,
         gridTemplateColumns: `repeat(${columns}, 1fr)`
-    }
+    };
 
-    // Reinitialize array when dimensions change
-    useEffect(() => {
+    useEffect(() => { // Reinitialize array when dimensions change
         setCellGrid(Array(rows*columns).fill(false));
-    }, [rows, columns])
-
+    }, [rows, columns]);
 
     // Button logic
     const handleStartClick = () => {
-        tick.startSimulation();
-    }
+        tick.startSimulation()
+    };
 
     const handlePauseClick = () => {
-        tick.pauseSimulation();
-    }
+        tick.pauseSimulation()
+    };
 
     const handleResetClick = () => {
         tick.restartSimulation();
         setCellGrid(Array(rows*columns).fill(false));
-    }
+    };
 
     const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const parsedValue = parseFloat(event.target.value)
-        const value = isNaN(parsedValue) ? 1 : parsedValue 
-        tick.changeSimulationInterval(value);
-    }
+        const parsedValue = parseFloat(event.target.value);
+        const clamp = Math.max(0, Math.min(100, parsedValue)); // clamp the values between 1 and 100
+        isNaN(parsedValue) ? tick.changeSimulationInterval(1) : tick.changeSimulationInterval(clamp);
+    };
 
     // Status methods
-    const getCellCount = (type: boolean) => {
+    const getCellCount = (type: boolean) => { // Get the total amount of infected (true) or healthy (false) cells
         let count = 0;
         cellGrid.forEach(value => {
-            if (type == value) {
-                count++
+            if (type === value) {
+                count++;
             }
         })
-        if (count >= rows*columns) {tick.pauseSimulation();}
+        if (count >= rows*columns) {
+            tick.pauseSimulation();
+        };
+
         return count;
-    }
+    };
     
     return (
         <>
+            {/* Resize tab */}
+            <GridSizeButtons rows={rows} columns={columns} setRows={setRows} setColumns={setColumns} />
+
+            {/* Grid container */}
             <div className="flex flex-col items-center w-[60%] h-[90%] gap-3 shadow-xl p-5">
                 {/* Title & heading */}
                 <div className="flex flex-col items-center">
@@ -107,16 +115,9 @@ const Grid = ({rows, columns}:GridProps) => {
             </div>
 
             {/* Status tab */}
-            <div className="flex flex-col gap-10 w-[20%] h-[50%] items-center shadow-xl p-10">
-                <label className="font-bold">STATUS WINDOW</label>
-                <div className="flex flex-col">
-                    <label>Infected: {getCellCount(true)}</label>
-                    <label>Normal: {getCellCount(false)} </label>
-                    <label>Actions: {tick.tick}</label>
-                </div>
-            </div>
+            <GridStatusWindow actionCount={tick.tick} getCellCount={getCellCount} />
         </>
-    )
-}
+    );
+};
 
 export default Grid;
