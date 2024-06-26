@@ -1,6 +1,7 @@
 // Grid component:
 // A component responsible for holding the rendered grid and components related to it (GridSizeButtons, GridStatusWindows, & Cell).
 // Creates the array that manages the state of all the cells within the rendered grid.
+// Listens for updates on the tick context to know when to divide.
 
 // Hooks
 import React, { useState, useEffect } from "react";
@@ -30,7 +31,7 @@ const Grid = () => {
                 const currentKey = (currentColumn*rows)+currentRow;
                 currentPosition = [currentRow, currentColumn];
                 renderedComponents.push(
-                    <Cell key={currentKey} id={currentKey} position={currentPosition} grid={cellGrid} setGrid={setCellGrid} gridDimensions={[rows, columns]} />
+                    <Cell key={currentKey} id={currentKey} grid={cellGrid} setGrid={setCellGrid} />
                 );
             }
         }
@@ -38,11 +39,35 @@ const Grid = () => {
         return renderedComponents;
     };
 
-    const clearGrid = () => { // Sets all values to false, only to be used when dimensions are unchanged
+    const convertToIndex = (position: number[]): number => { // Converts 2D coordinates given in an array into an index for the array that manages the state of the cells
+        return (position[1]*rows)+position[0]; // (current column * total rows in state array) + current row
+    };
+
+    const isInBounds = (position: number[]): boolean => { // Returns true or false based on if the passed position is within the grid boundaries
+        const currentRow = position[0];
+        const currentCol = position[1];
+
+        if ((currentCol+1 > columns || currentCol < 0) || (currentRow+1 > rows || currentRow < 0)) {
+            console.warn("Cell went out of bounds, not allowed to render - ID:", convertToIndex([currentRow, currentCol]));
+            return false;
+        };
+        return true;
+    };
+
+    const changeGrid = (cellId: number | number[], pos: number[]): void => { // Infects a healthy cell using its state array index or coordinates
+        const indexToLookFor = typeof(cellId) === 'number' ? cellId : convertToIndex(cellId);
+        if (isInBounds(pos) && cellGrid[indexToLookFor] === false ) {
+            setCellGrid(currentGrid => (
+                currentGrid.map((value, index) => (index === indexToLookFor ? true : value))
+            ));
+        };
+    };
+
+    const clearGrid = () => { // Sets all values to false, only to be used when dimensions are unchanged and we don't want a re-render
         setCellGrid(currentGrid => (currentGrid.map(value => value == true ? false : value)));
     };
 
-    const gridStyle = {
+    const gridStyle = { // CSS styling for grid wrapper
         gridTemplateRows: `repeat(${rows}, 1fr)`,
         gridTemplateColumns: `repeat(${columns}, 1fr)`
     };
@@ -50,6 +75,32 @@ const Grid = () => {
     useEffect(() => { // Reinitialize array when dimensions change
         setCellGrid(Array(rows*columns).fill(false));
     }, [rows, columns]);
+
+    useEffect(() => { // Listen for changes in tick to update the grid and cells that are infected, this simulates our bacteria
+        cellGrid.forEach((value, index) => {
+            if (value) {
+                const random1 = Math.floor(Math.random() * 4);
+                const random2 = Math.floor(Math.random() * 4);
+
+                // Convert index back to positional data
+                const currentRow = index%rows;
+                const currentColumn = Math.floor(index / rows)
+
+                const dir = [
+                    [1,0],
+                    [-1,0],
+                    [0,1],
+                    [0,-1]
+                ];
+
+                const x = currentRow + dir[random1][0]; // move one unit in a random x direction
+                const y = currentColumn + dir[random2][1]; // move one unit in a random y direction
+
+                const randomDirection = [x, y];
+                changeGrid(convertToIndex([x, y]), randomDirection);
+            }
+        })
+    }, [tick.tick]);
 
     // Button logic
     const handleStartClick = () => {
@@ -65,7 +116,7 @@ const Grid = () => {
         clearGrid();
     };
 
-    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => { // Pressing enter after setting an interval value starts the simulation
         if (event.key === "Enter") tick.startSimulation();
     };
 
