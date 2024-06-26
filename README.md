@@ -1,46 +1,47 @@
-# Getting Started with Create React App
+# J241 - Engineering Challenge Solution
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project aims to simulate bacterial growth on a dynamically resizable grid using React, while following biological rules. The application supports grids of up to 10,000 units in size and allows users to control the rate of bacterial division using the keyboard or mouse. Users can start, pause, and reset the simulation, place initial bacterial cells, and resize the grid dynamically. Additionally, the application provides detailed statistics on the ongoing simulation and responsive UI design.
 
-## Available Scripts
+https://github.com/jasooh/J241---Solution/assets/124289381/63e65248-78fb-42f3-a028-4527cf0a6bcc
 
-In the project directory, you can run:
+## Assumptions
+
+**The following assumptions were made for the biological rules:**
+1. Bacterial cells divide at fixed intervals (adjustable by the user).
+2. Bacterial cells divide only if there is at least one adjacent empty cell in any of the 8 directions.
+3. Bacterial cells divide themselves once per generation.
+5. Bacterial cells do not die, and the simulation ends when the grid is fully occupied by bacterial cells.
+
+## Performance Overview
+
+*Metrics were recorded with a simulation on a 20x20 grid, and 3 initial bacterial cells that divide every 0.5s.* \
+*Graphical performance was measured on a 4070 Ti and i7-14700k.*
+
+**First Contentful Paint:** ~200ms \
+**Average Frame Rate:** ~147 FPS
+
+## Running Locally
+
+1. Open a new file in your desired IDE.
+2. Ensure **Node.js**, **npm**, and **git** are installed.
+3. Clone the repository using `git clone https://github.com/jasooh/J241---Solution/`.
+4. Navigate to the project directory using `cd J241---Solution`.
+5. Install dependencies by running `npm install`
+
+Once the following steps have been completed, run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This runs the app in the development mode.\
+Open [http://localhost:3000] (http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+**The page will reload if you make edits.\
+You will also see any lint errors in the console.**
 
-### `npm test`
+## Live Application
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### https://jasooh.github.io/J241---Solution/
 
-### `npm run build`
+## Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project was bootstrapped with [**Create React App**] (https://github.com/facebook/create-react-app), written with **TypeScript**, and styled with [**Tailwind CSS**] (https://tailwindui.com/)
