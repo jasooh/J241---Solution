@@ -12,9 +12,11 @@ interface GridSizeProps {
 };
 
 // Set limits on inputs for the array
+const max = 200
+
 const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setVariable: Dispatch<SetStateAction<number>>) => {
     const parsedValue = parseInt(event.target.value);
-    const clamp = Math.max(1, Math.min(100, parsedValue)); // clamp the values between 1 and 100
+    const clamp = Math.max(1, Math.min(max, parsedValue)); // clamp the values between 1 and 100
     isNaN(parsedValue) ? setVariable(1) : setVariable(clamp);
 };
 

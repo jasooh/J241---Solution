@@ -48,7 +48,7 @@ const Grid = () => {
         const currentCol = position[1];
 
         if ((currentCol+1 > columns || currentCol < 0) || (currentRow+1 > rows || currentRow < 0)) {
-            console.warn("Cell went out of bounds, not allowed to render - ID:", convertToIndex([currentRow, currentCol]));
+            // console.warn("Cell went out of bounds, not allowed to render - ID:", convertToIndex([currentRow, currentCol]));
             return false;
         };
         return true;
