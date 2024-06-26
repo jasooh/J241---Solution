@@ -47,6 +47,7 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     };
 
     // useEffect listens for each tick update to infect nearby cells
+
     useEffect(() => {
         if (grid[id]) {
             const random1 = Math.floor(Math.random() * 4);
@@ -68,8 +69,8 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     }, [tick.tick]);
 
     // Render green or black depending on state
-    useEffect(() =>{
-        tick.renderCount.current += 1;
+    useEffect(() => {
+        console.log("Cell update, ID: " + id);
     })
 
     if (grid[id]) {

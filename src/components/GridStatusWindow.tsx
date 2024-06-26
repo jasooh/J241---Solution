@@ -1,8 +1,6 @@
 // GridStatusWindow component:
 // A component responsible for containing the buttons related to the current state of the grid.
 
-import { MutableRefObject } from "react";
-
 // Context type
 import { TickProps } from "../context/TickContext";
 
@@ -36,6 +34,7 @@ const GridStatusWindow = ({tick, cellGrid, rows, columns}:GridStatusWindowProps)
                 <label>Infected: {getCellCount(true)}</label>
                 <label>Normal: {getCellCount(false)} </label>
                 <label>Generation: {tick.tick}</label>
+                <label>Updates: {tick.renderCount.current}</label>
             </div>
         </div>
     );

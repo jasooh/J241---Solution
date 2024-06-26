@@ -1,5 +1,6 @@
 // Components
 import Grid from "./components/Grid";
+import React from "react";
 
 // Context provider
 import { TickProvider } from "./context/TickContext";

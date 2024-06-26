@@ -3,7 +3,7 @@
 // Creates the array that manages the state of all the cells within the rendered grid.
 
 // Hooks
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 // Components
 import Cell from "./Cell";
@@ -17,9 +17,9 @@ const Grid = () => {
     const tick = useTickContext();
 
     // State variables
-    const [rows, setRows] = useState(10);
-    const [columns, setColumns] = useState(10);
-    const [cellGrid, setCellGrid] = useState(Array(rows*columns).fill(false)); // Populate the array, this is the centralized array to manage the state of all cells
+    const [rows, setRows] = useState<number>(10);
+    const [columns, setColumns] = useState<number>(10);
+    const [cellGrid, setCellGrid] = useState<boolean[]>(Array(rows*columns).fill(false)); // Populate the array, this is the centralized array to manage the state of all cells
 
     // Grid methods & styling
     const renderGrid = (cellGrid: boolean[]) => { // Returns an array of JSX.Elements of <Cell>
@@ -49,11 +49,11 @@ const Grid = () => {
 
     // Button logic
     const handleStartClick = () => {
-        tick.startSimulation()
+        tick.startSimulation();
     };
 
     const handlePauseClick = () => {
-        tick.pauseSimulation()
+        tick.pauseSimulation();
     };
 
     const handleResetClick = () => {
@@ -61,11 +61,19 @@ const Grid = () => {
         setCellGrid(Array(rows*columns).fill(false));
     };
 
+    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") tick.startSimulation();
+    };
+
     const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const parsedValue = parseFloat(event.target.value);
         const clamp = Math.max(0, Math.min(100, parsedValue)); // clamp the values between 1 and 100
         isNaN(parsedValue) ? tick.changeSimulationInterval(1) : tick.changeSimulationInterval(clamp);
     };
+
+    useEffect(() =>{
+        tick.renderCount.current += 1;
+    })
     
     return (
         <>
@@ -95,7 +103,7 @@ const Grid = () => {
                 {/* Time input */}
                 <div className="flex flex-col items-center gap-3">
                     <label className="font-semibold">TIME INTERVAL (Seconds): </label>
-                    <input className="border border-black rounded w-30 py-1 px-2 mt-[-10px] mb-5 text-center" type="number" step="0.01" autoFocus={true} value={tick.interval} onChange={handleIntervalChange}/>
+                    <input className="border border-black rounded w-30 py-1 px-2 mt-[-10px] mb-5 text-center" type="number" step="0.01" autoFocus={true} value={tick.interval} onChange={handleIntervalChange} onKeyDown={(event) => handleOnKeyDown(event)}/>
                 </div>
             </div>
 
@@ -103,6 +111,6 @@ const Grid = () => {
             <GridStatusWindow tick={tick} cellGrid={cellGrid} rows={rows} columns={columns} />
         </>
     );
-};
+}
 
 export default Grid;

@@ -11,8 +11,8 @@ interface TickProps {
     changeSimulationInterval: (value: number) => void, // Adjusts the time between cell divsions (state updates)
     interval: number, // Keeps track of current time between cell divisions
     tick: number, // Keeps track of how many ticks/generations of bacteria have passed
-    isRunning: MutableRefObject<Boolean> // Keeps track of if the simulation is running,
-    renderCount: MutableRefObject<number>
+    isRunning: MutableRefObject<boolean> // Keeps track of if the simulation is running,
+    renderCount: MutableRefObject<number>,
 };
 
 const Tick = createContext({} as TickProps)
@@ -30,7 +30,7 @@ const TickProvider = ({children}:{children: ReactNode}) => {
     const startSimulation = () => {
         if (!isRunning.current) {
             const currentId = setInterval(() => {
-                setTick(prevTick => (prevTick+1));
+                setTick(prevTick => (prevTick + 1));
             }, interval*1000);
             setIntervalId(currentId);
             isRunning.current = true;
@@ -49,6 +49,7 @@ const TickProvider = ({children}:{children: ReactNode}) => {
         pauseSimulation();
         setTick(0);
         isRunning.current = false;
+        renderCount.current = 0
     };
 
     const changeSimulationInterval = (value: number) => {
