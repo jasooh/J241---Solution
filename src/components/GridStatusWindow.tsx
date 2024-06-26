@@ -1,5 +1,5 @@
 // GridStatusWindow component:
-// A component responsible for containing the buttons related to the current state of the grid.
+// A component responsible for containing the buttons related to the current state of the grid. Responsible for stopping the simulation when it fills up.
 
 // Context type
 import { TickProps } from "../context/TickContext";
@@ -18,12 +18,11 @@ const GridStatusWindow = ({tick, cellGrid, rows, columns}:GridStatusWindowProps)
         cellGrid.forEach(value => {
             if (type === value) {
                 count++;
-            }
-        })
+            };
+        });
         if (count >= rows*columns) {
             tick.pauseSimulation();
         };
-
         return count;
     };
 
@@ -34,7 +33,6 @@ const GridStatusWindow = ({tick, cellGrid, rows, columns}:GridStatusWindowProps)
                 <label>Infected: {getCellCount(true)}</label>
                 <label>Normal: {getCellCount(false)} </label>
                 <label>Generation: {tick.tick}</label>
-                <label>Updates: {tick.renderCount.current}</label>
             </div>
         </div>
     );

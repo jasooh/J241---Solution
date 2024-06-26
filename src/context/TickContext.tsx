@@ -12,7 +12,6 @@ interface TickProps {
     interval: number, // Keeps track of current time between cell divisions
     tick: number, // Keeps track of how many ticks/generations of bacteria have passed
     isRunning: MutableRefObject<boolean> // Keeps track of if the simulation is running,
-    renderCount: MutableRefObject<number>,
 };
 
 const Tick = createContext({} as TickProps)
@@ -24,10 +23,9 @@ const TickProvider = ({children}:{children: ReactNode}) => {
     const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
     const [interval, setIntervalValue] = useState(1);
     const isRunning = useRef(false);
-    const renderCount = useRef(0);
 
     // Context methods
-    const startSimulation = () => {
+    const startSimulation = () => { // Start tick counting
         if (!isRunning.current) {
             const currentId = setInterval(() => {
                 setTick(prevTick => (prevTick + 1));
@@ -37,7 +35,7 @@ const TickProvider = ({children}:{children: ReactNode}) => {
         };
     };
 
-    const pauseSimulation = () => {
+    const pauseSimulation = () => { // Pause counting
         if (intervalId) {
             clearInterval(intervalId);
             setIntervalId(null);
@@ -45,22 +43,21 @@ const TickProvider = ({children}:{children: ReactNode}) => {
         };
     };
 
-    const restartSimulation = () => {
+    const restartSimulation = () => { // Restart
         pauseSimulation();
         setTick(0);
         isRunning.current = false;
-        renderCount.current = 0
     };
 
-    const changeSimulationInterval = (value: number) => {
+    const changeSimulationInterval = (value: number) => { // Used to adjust intervals between generations
         if (isRunning.current) {
-            pauseSimulation()
+            pauseSimulation();
         };
         setIntervalValue(value);
     };
 
     return (
-        <Tick.Provider value={{ startSimulation, pauseSimulation, restartSimulation, changeSimulationInterval, interval, tick, isRunning, renderCount }}>{children}</Tick.Provider>
+        <Tick.Provider value={{ startSimulation, pauseSimulation, restartSimulation, changeSimulationInterval, interval, tick, isRunning }}>{children}</Tick.Provider>
     );
 };
 

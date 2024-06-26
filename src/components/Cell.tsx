@@ -27,11 +27,12 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     const isInBounds = (position: number[]): boolean => { // Returns true or false based on if the passed position is within the grid boundaries
         const currentRow = position[0];
         const currentCol = position[1];
-
+        // Retrieve grid dimensions
         const gridRows = gridDimensions[0];
         const gridCols = gridDimensions[1];
 
         if ((currentCol+1 > gridCols || currentCol < 0) || (currentRow+1 > gridRows || currentRow < 0)) {
+            console.warn("Cell went out of bounds, not allowed to render - ID:", id)
             return false;
         };
         return true;
@@ -47,7 +48,6 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     };
 
     // useEffect listens for each tick update to infect nearby cells
-
     useEffect(() => {
         if (grid[id]) {
             const random1 = Math.floor(Math.random() * 4);
@@ -69,10 +69,6 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     }, [tick.tick]);
 
     // Render green or black depending on state
-    useEffect(() => {
-        console.log("Cell update, ID: " + id);
-    })
-
     if (grid[id]) {
         return (
             <div className="border border-black bg-green-600" />
@@ -82,7 +78,7 @@ const Cell = React.memo(({id, position, grid, setGrid, gridDimensions}:CellProps
     
 }, (prevProps, nextProps) => {
     // If current props are equal to the next state props, then we do not need to re-render - cell has not been changed
-    return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id]
+    return prevProps.grid[prevProps.id] === nextProps.grid[nextProps.id];
 });
 
 export default Cell;

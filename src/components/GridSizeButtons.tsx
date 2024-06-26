@@ -1,6 +1,7 @@
 // GridSizeButtons component: 
 // A component that holds all the input tags that change the dimensions of the array on one section of the screen.
 
+// Types
 import { Dispatch, SetStateAction } from "react";
 
 interface GridSizeProps {

@@ -38,6 +38,10 @@ const Grid = () => {
         return renderedComponents;
     };
 
+    const clearGrid = () => { // Sets all values to false, only to be used when dimensions are unchanged
+        setCellGrid(currentGrid => (currentGrid.map(value => value == true ? false : value)));
+    };
+
     const gridStyle = {
         gridTemplateRows: `repeat(${rows}, 1fr)`,
         gridTemplateColumns: `repeat(${columns}, 1fr)`
@@ -58,7 +62,7 @@ const Grid = () => {
 
     const handleResetClick = () => {
         tick.restartSimulation();
-        setCellGrid(Array(rows*columns).fill(false));
+        clearGrid();
     };
 
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -70,10 +74,6 @@ const Grid = () => {
         const clamp = Math.max(0, Math.min(100, parsedValue)); // clamp the values between 1 and 100
         isNaN(parsedValue) ? tick.changeSimulationInterval(1) : tick.changeSimulationInterval(clamp);
     };
-
-    useEffect(() =>{
-        tick.renderCount.current += 1;
-    })
     
     return (
         <>
@@ -111,6 +111,6 @@ const Grid = () => {
             <GridStatusWindow tick={tick} cellGrid={cellGrid} rows={rows} columns={columns} />
         </>
     );
-}
+};
 
 export default Grid;
