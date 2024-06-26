@@ -1,6 +1,6 @@
 # J241 - Engineering Challenge Solution
 
-This project aims to simulate bacterial growth on a dynamically resizable grid using React, while following biological rules. The application supports grids of up to 10,000 units in size and allows users to control the rate of bacterial division using the keyboard or mouse. Users can start, pause, and reset the simulation, place initial bacterial cells, and resize the grid dynamically. Additionally, the application provides detailed statistics on the ongoing simulation.
+This project aims to simulate bacterial growth on a dynamically resizable grid using React, while following biological rules. The application supports grids of up to 10,000 units in size and allows users to control the rate of bacterial division using the keyboard or mouse. Users can start, pause, and reset the simulation, place initial bacterial cells, and resize the grid dynamically. Additionally, the application provides detailed statistics on the ongoing simulation and responsive UI design.
 
 https://github.com/jasooh/J241---Solution/assets/124289381/63e65248-78fb-42f3-a028-4527cf0a6bcc
 
