@@ -30,7 +30,7 @@ const GridSizeButtons = ({rows, columns, setRows, setColumns}:GridSizeProps) => 
                 <label>Columns</label>
                 <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={columns} onChange={(event) => handleChange(event, setColumns)} />
             </div>
-      </div>
+        </div>
     );
 };
 
