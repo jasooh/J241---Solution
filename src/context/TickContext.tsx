@@ -29,7 +29,7 @@ const TickProvider = ({children}:{children: ReactNode}) => {
         if (!isRunning.current) {
             const currentId = setInterval(() => {
                 setTick(prevTick => (prevTick + 1));
-            }, interval*1000);
+            }, interval*1000); // In ms
             setIntervalId(currentId);
             isRunning.current = true;
         };

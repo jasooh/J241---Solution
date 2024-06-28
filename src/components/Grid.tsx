@@ -153,8 +153,8 @@ const Grid = () => {
 
                 {/* Time input */}
                 <div className="flex flex-col items-center gap-3">
-                    <label className="font-semibold">TIME INTERVAL (Seconds): </label>
-                    <input className="border border-black rounded w-30 py-1 px-2 mt-[-10px] mb-5 text-center" type="number" step="0.01" autoFocus={true} value={tick.interval} onChange={handleIntervalChange} onKeyDown={(event) => handleOnKeyDown(event)}/>
+                    <label htmlFor="interval" className="font-semibold">TIME INTERVAL (Seconds): </label>
+                    <input id="interval" className="border border-black rounded w-30 py-1 px-2 mt-[-10px] mb-5 text-center" type="number" step="0.01" autoFocus={true} value={tick.interval} onChange={handleIntervalChange} onKeyDown={(event) => handleOnKeyDown(event)}/>
                 </div>
             </div>
 

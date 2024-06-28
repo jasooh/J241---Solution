@@ -2,7 +2,7 @@
 // A component responsible for rendering a single box (cell) in the array.
 
 // Hooks & types
-import React, { SetStateAction, useEffect, Dispatch } from "react";
+import React, { SetStateAction, Dispatch } from "react";
 
 interface CellProps {
     id: number, // Index of cell in the state array

@@ -12,7 +12,7 @@ interface GridSizeProps {
 };
 
 // Set limits on inputs for the array
-const max = 200
+const max = 100
 
 const handleChange = (event: React.ChangeEvent<HTMLInputElement>, setVariable: Dispatch<SetStateAction<number>>) => {
     const parsedValue = parseInt(event.target.value);
@@ -24,12 +24,12 @@ const GridSizeButtons = ({rows, columns, setRows, setColumns}:GridSizeProps) => 
     return (
         <div className="flex flex-col items-center justify-center gap-5 w-full max-w-[20rem] h-[20rem] shadow-xl p-10">
             <label className="font-bold">GRID SIZE</label>
-            <div className="flex flex-col items-center">
-                <label>Rows</label>
-                <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={rows} onChange={(event) => handleChange(event, setRows)} />
-                <label>Columns</label>
-                <input className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={columns} onChange={(event) => handleChange(event, setColumns)} />
-            </div>
+            <form className="flex flex-col items-center">
+                <label htmlFor="rows">Rows</label>
+                <input id="rows" className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={rows} onChange={(event) => handleChange(event, setRows)} />
+                <label htmlFor="columns">Columns</label>
+                <input id="columns" className="rounded w-16 py-1 px-2 mb-5 text-center shadow" type="number" step="1" value={columns} onChange={(event) => handleChange(event, setColumns)} />
+            </form>
         </div>
     );
 };
